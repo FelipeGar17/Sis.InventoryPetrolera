@@ -26,8 +26,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copiar código de la aplicación
 COPY . .
 
-# Exponer puerto
-EXPOSE 5000
+# Exponer puerto (Railway usa variable PORT dinámica)
+EXPOSE 8080
 
 # Comando para ejecutar la aplicación
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "4", "--timeout", "120", "run:app"]
+# Railway inyecta automáticamente la variable PORT
+CMD gunicorn run:app --workers 4 --timeout 120 --bind 0.0.0.0:$PORT
