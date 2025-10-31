@@ -3,7 +3,10 @@
  * Centraliza todas las peticiones HTTP
  */
 
-const API_BASE_URL = 'http://localhost:5000/api';
+// Detectar automáticamente la URL del API según el entorno
+const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:5000/api'  // Desarrollo local
+    : '/api';  // Producción (Railway) - usa la misma URL del frontend
 
 class API {
     /**
