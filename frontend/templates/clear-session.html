@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Limpiar Sesión - Sistema de Inventario</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 400px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        .btn {
+            background: #dc2626;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 0.5rem;
+        }
+        .btn:hover {
+            background: #b91c1c;
+        }
+        .btn-secondary {
+            background: #3b82f6;
+        }
+        .btn-secondary:hover {
+            background: #2563eb;
+        }
+        .success {
+            color: #10b981;
+            font-weight: bold;
+            margin-top: 1rem;
+        }
+        ul {
+            text-align: left;
+            background: #f3f4f6;
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+        }
+        li {
+            margin: 0.5rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Herramienta de Limpieza</h1>
+        <p>Esta página limpia toda la información de sesión almacenada.</p>
+        
+        <div id="info" style="margin: 1rem 0;">
+            <strong>Datos actuales en localStorage:</strong>
+            <ul id="currentData"></ul>
+        </div>
+
+        <button class="btn" onclick="clearSession()">🗑️ Limpiar Sesión</button>
+        <button class="btn btn-secondary" onclick="window.location.href='/login'">🔐 Ir al Login</button>
+
+        <div id="message"></div>
+    </div>
+
+    <script>
+        // Mostrar datos actuales
+        function showCurrentData() {
+            const list = document.getElementById('currentData');
+            list.innerHTML = '';
+            
+            const keys = ['access_token', 'user_role', 'username', 'user_full_name', 'token', 'user'];
+            
+            keys.forEach(key => {
+                const value = localStorage.getItem(key);
+                if (value) {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<strong>${key}:</strong> ${value.substring(0, 50)}${value.length > 50 ? '...' : ''}`;
+                    list.appendChild(li);
+                }
+            });
+
+            if (list.children.length === 0) {
+                list.innerHTML = '<li style="color: #999;">No hay datos almacenados</li>';
+            }
+        }
+
+        // Limpiar sesión
+        function clearSession() {
+            // Limpiar TODAS las claves (incluyendo las viejas y nuevas)
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('user_role');
+            localStorage.removeItem('username');
+            localStorage.removeItem('user_full_name');
+            localStorage.removeItem('token');  // Clave vieja
+            localStorage.removeItem('user');   // Clave vieja
+            
+            document.getElementById('message').innerHTML = 
+                '<p class="success">✅ Sesión limpiada correctamente</p>';
+            
+            // Actualizar lista
+            showCurrentData();
+
+            // Redirigir al login después de 2 segundos
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 2000);
+        }
+
+        // Cargar datos al inicio
+        showCurrentData();
+    </script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  # Base de datos MySQL
+  db:
+    image: mysql:8.0
+    container_name: inventario_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-admin123}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-inventario_petrolera}
+      MYSQL_USER: ${MYSQL_USER:-inventario_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-inventario_pass}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - inventario_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  # Aplicación Flask
+  web:
+    build: .
+    container_name: inventario_flask
+    restart: always
+    environment:
+      - FLASK_ENV=${FLASK_ENV:-production}
+      - SECRET_KEY=${SECRET_KEY:-change-this-in-production}
+      - DATABASE_URL=mysql+pymysql://${MYSQL_USER:-inventario_user}:${MYSQL_PASSWORD:-inventario_pass}@db:3306/${MYSQL_DATABASE:-inventario_petrolera}
+    ports:
+      - "5000:5000"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - inventario_network
+    volumes:
+      - ./frontend:/app/frontend
+      - ./backend:/app/backend
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  inventario_network:
+    driver: bridge

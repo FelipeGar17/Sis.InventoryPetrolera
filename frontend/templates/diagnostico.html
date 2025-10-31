@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnóstico de Sesión</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background: #1a1a1a;
+            color: #0f0;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #000;
+            border: 2px solid #0f0;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,255,0,0.3);
+        }
+        h1 {
+            text-align: center;
+            color: #0ff;
+            text-shadow: 0 0 10px #0ff;
+        }
+        .section {
+            margin: 2rem 0;
+            padding: 1rem;
+            border: 1px solid #0f0;
+            background: rgba(0,255,0,0.05);
+        }
+        .item {
+            display: flex;
+            justify-content: space-between;
+            margin: 0.5rem 0;
+            padding: 0.5rem;
+            background: rgba(0,0,0,0.5);
+        }
+        .label {
+            color: #ff0;
+            font-weight: bold;
+        }
+        .value {
+            color: #0ff;
+            word-break: break-all;
+            max-width: 60%;
+            text-align: right;
+        }
+        .ok { color: #0f0; }
+        .error { color: #f00; }
+        .warning { color: #ff0; }
+        button {
+            background: #0f0;
+            color: #000;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            margin: 0.5rem;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #0ff;
+        }
+        .btn-danger {
+            background: #f00;
+            color: #fff;
+        }
+        .btn-danger:hover {
+            background: #f66;
+        }
+        pre {
+            background: rgba(0,255,0,0.1);
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 DIAGNÓSTICO DE SESIÓN</h1>
+
+        <div class="section">
+            <h2>📦 LocalStorage</h2>
+            <div id="localStorage"></div>
+        </div>
+
+        <div class="section">
+            <h2>🔐 Token JWT</h2>
+            <div id="tokenInfo"></div>
+        </div>
+
+        <div class="section">
+            <h2>🧪 Test de API</h2>
+            <button onclick="testUsersAPI()">Test GET /api/users/</button>
+            <button onclick="testArticlesAPI()">Test GET /api/articles/</button>
+            <button onclick="testReportsAPI()">Test GET /api/reports/all</button>
+            <div id="apiResults" style="margin-top: 1rem;"></div>
+        </div>
+
+        <div style="text-align: center; margin-top: 2rem;">
+            <button onclick="window.location.href='/clear-session'">🗑️ Limpiar Sesión</button>
+            <button onclick="window.location.href='/login'">🔐 Ir al Login</button>
+            <button onclick="window.location.reload()">🔄 Recargar</button>
+        </div>
+    </div>
+
+    <script>
+        // Mostrar localStorage
+        function displayLocalStorage() {
+            const container = document.getElementById('localStorage');
+            const keys = ['access_token', 'user_role', 'username', 'user_full_name', 'token', 'user'];
+            
+            let html = '';
+            keys.forEach(key => {
+                const value = localStorage.getItem(key);
+                const status = value ? 'ok' : 'error';
+                html += `
+                    <div class="item">
+                        <span class="label">${key}:</span>
+                        <span class="value ${status}">${value ? value.substring(0, 50) + (value.length > 50 ? '...' : '') : '❌ NO EXISTE'}</span>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+
+            // Advertencia si existen claves viejas
+            if (localStorage.getItem('token') || localStorage.getItem('user')) {
+                container.innerHTML += '<div style="color: #ff0; margin-top: 1rem;">⚠️ ADVERTENCIA: Detectadas claves antiguas (token/user). Limpie la sesión.</div>';
+            }
+        }
+
+        // Decodificar JWT
+        function decodeJWT(token) {
+            try {
+                const parts = token.split('.');
+                if (parts.length !== 3) return null;
+                
+                const payload = JSON.parse(atob(parts[1]));
+                return payload;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        // Mostrar info del token
+        function displayTokenInfo() {
+            const container = document.getElementById('tokenInfo');
+            const token = localStorage.getItem('access_token');
+            
+            if (!token) {
+                container.innerHTML = '<div class="error">❌ No hay token guardado</div>';
+                return;
+            }
+
+            const payload = decodeJWT(token);
+            
+            if (!payload) {
+                container.innerHTML = '<div class="error">❌ Token inválido o mal formado</div>';
+                return;
+            }
+
+            const now = Math.floor(Date.now() / 1000);
+            const expired = payload.exp < now;
+
+            let html = `
+                <div class="item">
+                    <span class="label">User ID:</span>
+                    <span class="value">${payload.user_id || 'N/A'}</span>
+                </div>
+                <div class="item">
+                    <span class="label">Username:</span>
+                    <span class="value">${payload.username || 'N/A'}</span>
+                </div>
+                <div class="item">
+                    <span class="label">Role:</span>
+                    <span class="value">${payload.role || 'N/A'}</span>
+                </div>
+                <div class="item">
+                    <span class="label">Expira:</span>
+                    <span class="value ${expired ? 'error' : 'ok'}">
+                        ${new Date(payload.exp * 1000).toLocaleString('es-ES')}
+                        ${expired ? ' ❌ EXPIRADO' : ' ✅ VÁLIDO'}
+                    </span>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        // Test API
+        async function testAPI(endpoint, name) {
+            const results = document.getElementById('apiResults');
+            results.innerHTML += `<div>Probando ${name}...</div>`;
+
+            const token = localStorage.getItem('access_token');
+            if (!token) {
+                results.innerHTML += `<div class="error">❌ No hay token para probar</div>`;
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:5000${endpoint}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    results.innerHTML += `<div class="ok">✅ ${name}: OK (${Array.isArray(data) ? data.length + ' items' : 'success'})</div>`;
+                } else {
+                    const error = await response.json();
+                    results.innerHTML += `<div class="error">❌ ${name}: ${response.status} - ${error.error || error.message || 'Error'}</div>`;
+                }
+            } catch (error) {
+                results.innerHTML += `<div class="error">❌ ${name}: ${error.message}</div>`;
+            }
+        }
+
+        function testUsersAPI() {
+            document.getElementById('apiResults').innerHTML = '';
+            testAPI('/api/users/', 'GET /api/users/');
+        }
+
+        function testArticlesAPI() {
+            document.getElementById('apiResults').innerHTML = '';
+            testAPI('/api/articles/', 'GET /api/articles/');
+        }
+
+        function testReportsAPI() {
+            document.getElementById('apiResults').innerHTML = '';
+            testAPI('/api/reports/all', 'GET /api/reports/all');
+        }
+
+        // Inicializar
+        displayLocalStorage();
+        displayTokenInfo();
+    </script>
+</body>
+</html>

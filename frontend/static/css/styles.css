@@ -1,0 +1,72 @@
+/* 
+ * Estilos base del login
+ * Este archivo se usa solo para la pagina de login
+ */
+
+body.login-page {
+    background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDvi2JNbZHJVUXDa3MdI1T8QmtZSVXRZ8_1w&s') center/cover no-repeat fixed;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+body.login-page::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1;
+}
+
+.login-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    max-width: 1000px;
+    width: 90%;
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    z-index: 2;
+    position: relative;
+}
+
+.image-section {
+    background: url('https://worldenergytrad.com/wp-content/uploads/2024/10/arabia-saudi-advierte-de-que-el-precio-del-petroleo-podria-caer-a-50-dolares-40049.jpg') center/cover;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: white;
+    position: relative;
+}
+
+.image-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(0,0,0,0.85) 0%, rgba(255,87,34,0.7) 100%);
+    z-index: 1;
+}
+
+.image-section > * {
+    position: relative;
+    z-index: 2;
+}
+
+@media (max-width: 768px) {
+    .login-container {
+        grid-template-columns: 1fr;
+    }
+    .image-section {
+        display: none;
+    }
+}

@@ -1,0 +1,270 @@
+/* Dashboard Admin Styles */
+
+.dashboard-container {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 280px;
+    background: linear-gradient(180deg, #1a1a1a 0%, #2d2d2d 100%);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 4px 0 10px rgba(0,0,0,0.3);
+    position: relative;
+    z-index: 10;
+}
+
+.sidebar-header {
+    padding: 2rem 1.5rem;
+    border-bottom: 1px solid rgba(216,67,21,0.3);
+}
+
+.sidebar-header h1 {
+    color: #d84315;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.sidebar-header p {
+    color: #999;
+    font-size: 0.875rem;
+}
+
+.sidebar-menu {
+    flex: 1;
+    padding: 1rem 0;
+    overflow-y: auto;
+}
+
+.menu-item {
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: #ccc;
+    border-left: 3px solid transparent;
+}
+
+.menu-item:hover {
+    background: rgba(216,67,21,0.1);
+    color: white;
+    border-left-color: #d84315;
+}
+
+.menu-item.active {
+    background: rgba(216,67,21,0.2);
+    color: #d84315;
+    border-left-color: #d84315;
+}
+
+.menu-item-icon {
+    font-size: 1.25rem;
+}
+
+.sidebar-footer {
+    padding: 1.5rem;
+    border-top: 1px solid rgba(216,67,21,0.3);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    background: #d84315;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.logout-btn {
+    width: 100%;
+    padding: 0.75rem;
+    background: #d84315;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.logout-btn:hover {
+    background: #bf360c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(216,67,21,0.3);
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.content-area {
+    flex: 1;
+    padding: 2rem;
+    overflow-y: auto;
+}
+
+.page-header {
+    margin-bottom: 2rem;
+}
+
+.page-title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #1a1a1a;
+    margin-bottom: 0.5rem;
+}
+
+.page-subtitle {
+    color: #666;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .sidebar {
+        width: 240px;
+    }
+    
+    .content-area {
+        padding: 1.5rem;
+    }
+    
+    /* Hacer tabla scrolleable horizontalmente */
+    .card {
+        overflow-x: auto;
+    }
+}
+
+@media (max-width: 992px) {
+    .sidebar {
+        width: 200px;
+    }
+    
+    .sidebar-header h1 {
+        font-size: 1.25rem;
+    }
+    
+    .menu-item {
+        padding: 0.75rem 1rem;
+        font-size: 0.875rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-container {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+    }
+    
+    .sidebar-header {
+        padding: 0;
+        border: none;
+        margin: 0;
+    }
+    
+    .sidebar-header h1 {
+        font-size: 1.25rem;
+        margin: 0;
+    }
+    
+    .sidebar-header p {
+        display: none;
+    }
+    
+    .sidebar-menu {
+        display: none;
+    }
+    
+    .sidebar-footer {
+        display: flex;
+        align-items: center;
+        padding: 0;
+        border: none;
+        gap: 1rem;
+    }
+    
+    .user-info {
+        margin: 0;
+        flex-direction: row;
+    }
+    
+    .logout-btn {
+        width: auto;
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+    }
+    
+    .content-area {
+        padding: 1rem;
+        height: calc(100vh - 80px);
+    }
+    
+    .page-title {
+        font-size: 1.5rem;
+    }
+    
+    /* Asegurar que la tabla sea scrolleable */
+    .card {
+        padding: 0.75rem;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    table.dataTable {
+        font-size: 0.875rem;
+        min-width: 900px;
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebar-header h1 {
+        font-size: 1rem;
+    }
+    
+    .user-avatar {
+        width: 32px;
+        height: 32px;
+        font-size: 1rem;
+    }
+    
+    .page-title {
+        font-size: 1.25rem;
+    }
+    
+    .btn-primary {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+    }
+    
+    table.dataTable {
+        font-size: 0.75rem;
+    }
+}

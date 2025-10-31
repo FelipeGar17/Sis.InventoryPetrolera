@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - Sistema de Inventario</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- CSS personalizados organizados -->
+    <link rel="stylesheet" href="/static/css/global.css">
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+    <link rel="stylesheet" href="/static/css/datatable.css">
+    <link rel="stylesheet" href="/static/css/modal.css">
+    
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>🛢️ INVENTARIO</h1>
+                <p>Central Petrolera</p>
+            </div>
+
+            <nav class="sidebar-menu">
+                <div class="menu-item active" onclick="navigateTo('productos')">
+                    <span class="menu-item-icon">📦</span>
+                    <span>Productos</span>
+                </div>
+                <div class="menu-item" onclick="navigateTo('operarios')">
+                    <span class="menu-item-icon">👷</span>
+                    <span>Operarios</span>
+                </div>
+                <div class="menu-item" onclick="navigateTo('notas')">
+                    <span class="menu-item-icon">📝</span>
+                    <span>Notas y Reportes</span>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar">A</div>
+                    <div>
+                        <div style="font-weight: 600;" id="user-name">Admin</div>
+                        <div style="font-size: 0.75rem; color: #999;">Administrador</div>
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="logout()">
+                    🚪 Cerrar Sesion
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="content-area">
+                
+                <!-- Sección de Productos -->
+                <div id="productos-section" class="section-content">
+                    <!-- Page Header -->
+                    <div class="page-header">
+                        <h1 class="page-title">Gestion de Productos</h1>
+                        <p class="page-subtitle">Inventario de maquinaria y herramientas</p>
+                    </div>
+
+                    <!-- Actions Bar -->
+                    <div style="margin-bottom: 1.5rem;">
+                        <button class="btn-primary" onclick="openCreateModal()">
+                            ➕ Nuevo Producto
+                        </button>
+                    </div>
+
+                    <!-- Products Table -->
+                    <div class="card">
+                        <table id="productsTable" class="display" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Codigo</th>
+                                    <th>Nombre</th>
+                                    <th>Tipo</th>
+                                    <th>Categoria</th>
+                                    <th>Estado</th>
+                                    <th>Stock</th>
+                                    <th>Ubicacion</th>
+                                    <th>Fecha Adquisicion</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Data will be loaded via DataTables -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Sección de Operarios -->
+                <div id="operarios-section" class="section-content" style="display: none;">
+                    <div class="page-header">
+                        <h1 class="page-title">Gestión de Operarios</h1>
+                        <p class="page-subtitle">Administración de usuarios del sistema</p>
+                    </div>
+
+                    <div style="margin-bottom: 1.5rem;">
+                        <button class="btn-primary" onclick="openCreateUserModal()">
+                            ➕ Nuevo Operario
+                        </button>
+                    </div>
+
+                    <div class="card">
+                        <table id="usersTable" class="display" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Usuario</th>
+                                    <th>Nombre Completo</th>
+                                    <th>Email</th>
+                                    <th>Rol</th>
+                                    <th>Estado</th>
+                                    <th>Último Login</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Data will be loaded via DataTables -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Sección de Notas / Reportes -->
+                <div id="notas-section" class="section-content" style="display: none;">
+                    <div class="page-header">
+                        <h1 class="page-title">Gestión de Reportes</h1>
+                        <p class="page-subtitle">Reportes de operarios sobre equipos</p>
+                    </div>
+
+                    <!-- Filtros -->
+                    <div class="card" style="margin-bottom: 1.5rem;">
+                        <div style="display: flex; gap: 1rem; align-items: center;">
+                            <label style="font-weight: 600;">Filtrar por estado:</label>
+                            <select id="reportStatusFilter" onchange="filterReportsByStatus()" style="padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+                                <option value="">Todos los reportes</option>
+                                <option value="PENDIENTE">⏱️ Pendientes</option>
+                                <option value="EN_REVISION">🔍 En Revisión</option>
+                                <option value="RESUELTO">✅ Resueltos</option>
+                                <option value="CERRADO">🔒 Cerrados</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <table id="reportsTable" class="display" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Operario</th>
+                                    <th>Equipo</th>
+                                    <th>Tipo</th>
+                                    <th>Mensaje</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Data will be loaded via DataTables -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal para Crear/Editar Producto -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Nuevo Producto</h2>
+                <button class="modal-close" onclick="closeProductModal()">&times;</button>
+            </div>
+            
+            <form id="productForm" onsubmit="saveProduct(event)">
+                <input type="hidden" id="productId" value="">
+                
+                <div class="form-grid">
+                    <!-- Código -->
+                    <div class="form-group">
+                        <label for="code">Código <span class="required">*</span></label>
+                        <input type="text" id="code" required maxlength="50" 
+                               placeholder="Ej: MAQ-001" 
+                               oninput="checkCodeAvailability(this.value)">
+                        <small id="codeHint" class="hint-text"></small>
+                    </div>
+
+                    <!-- Tipo -->
+                    <div class="form-group">
+                        <label for="tipo">Tipo de Equipo <span class="required">*</span></label>
+                        <select id="tipo" required onchange="handleTipoChange()">
+                            <option value="">Seleccionar...</option>
+                            <optgroup label="Maquinaria">
+                                <option value="Maquinaria Grande">Maquinaria Grande</option>
+                                <option value="Maquinaria Pequeña">Maquinaria Pequeña</option>
+                                <option value="Maquinaria Electrica">Maquinaria Eléctrica</option>
+                            </optgroup>
+                            <optgroup label="Herramientas">
+                                <option value="Herramienta">Herramienta</option>
+                                <option value="Herramienta de Mano">Herramienta de Mano</option>
+                                <option value="Herramienta Electrica">Herramienta Eléctrica</option>
+                                <option value="Herramienta Neumatica">Herramienta Neumática</option>
+                            </optgroup>
+                        </select>
+                    </div>
+
+                    <!-- Nombre con Autocompletado -->
+                    <div class="form-group full-width">
+                        <label for="name">Nombre del Producto <span class="required">*</span></label>
+                        <div class="autocomplete-wrapper">
+                            <input type="text" id="name" required maxlength="200" 
+                                   placeholder="Ej: Compresor Industrial 500HP"
+                                   oninput="handleAutocomplete(this, 'name')"
+                                   autocomplete="off">
+                            <div id="name-suggestions" class="suggestions-list"></div>
+                        </div>
+                    </div>
+
+                    <!-- Descripción -->
+                    <div class="form-group full-width">
+                        <label for="description">Descripción</label>
+                        <textarea id="description" rows="3" 
+                                  placeholder="Descripción detallada del equipo..."></textarea>
+                    </div>
+
+                    <!-- Categoría con Autocompletado -->
+                    <div class="form-group">
+                        <label for="category">Categoría</label>
+                        <div class="autocomplete-wrapper">
+                            <input type="text" id="category" maxlength="100" 
+                                   placeholder="Ej: Compresores"
+                                   oninput="handleAutocomplete(this, 'category')"
+                                   autocomplete="off">
+                            <div id="category-suggestions" class="suggestions-list"></div>
+                        </div>
+                    </div>
+
+                    <!-- Ubicación con Autocompletado -->
+                    <div class="form-group">
+                        <label for="location">Ubicación</label>
+                        <div class="autocomplete-wrapper">
+                            <input type="text" id="location" maxlength="100" 
+                                   placeholder="Ej: Almacén Principal"
+                                   oninput="handleAutocomplete(this, 'location')"
+                                   autocomplete="off">
+                            <div id="location-suggestions" class="suggestions-list"></div>
+                        </div>
+                    </div>
+
+                    <!-- Estado -->
+                    <div class="form-group">
+                        <label for="status">Estado</label>
+                        <select id="status">
+                            <option value="FUNCIONANDO">Funcionando</option>
+                            <option value="MANTENIMIENTO">Mantenimiento</option>
+                            <option value="REVISION">Revisión</option>
+                            <option value="BAJA">Baja</option>
+                        </select>
+                    </div>
+
+                    <!-- Campos de Stock (dinámicos) -->
+                    <div id="stockFields" class="form-group full-width" style="display: none;">
+                        <label for="unit">Unidad de Medida</label>
+                        <div class="autocomplete-wrapper">
+                            <input type="text" id="unit" maxlength="50" 
+                                   placeholder="Ej: piezas, litros, kg"
+                                   oninput="handleAutocomplete(this, 'unit')"
+                                   autocomplete="off">
+                            <div id="unit-suggestions" class="suggestions-list"></div>
+                        </div>
+                    </div>
+
+                    <div id="stockMinField" class="form-group" style="display: none;">
+                        <label for="stock_min">Stock Mínimo</label>
+                        <input type="number" id="stock_min" min="0" value="0" placeholder="0">
+                    </div>
+
+                    <div id="stockCurrentField" class="form-group" style="display: none;">
+                        <label for="stock_current">Stock Actual</label>
+                        <input type="number" id="stock_current" min="0" value="0" placeholder="0">
+                    </div>
+
+                    <!-- Fecha de Adquisición -->
+                    <div class="form-group">
+                        <label for="acquisition_date">Fecha de Adquisición</label>
+                        <input type="date" id="acquisition_date">
+                    </div>
+
+                    <!-- Espacio vacío para mantener el grid -->
+                    <div id="emptySpace" class="form-group" style="display: none;"></div>
+
+                    <!-- Observaciones -->
+                    <div class="form-group full-width">
+                        <label for="observations">Observaciones</label>
+                        <textarea id="observations" rows="3" 
+                                  placeholder="Notas adicionales sobre el equipo..."></textarea>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" onclick="closeProductModal()">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn-primary">
+                        <span id="submitBtnText">Guardar Producto</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal para Crear/Editar Usuario -->
+    <div id="userModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="userModalTitle">Nuevo Operario</h2>
+                <button class="modal-close" onclick="closeUserModal()">&times;</button>
+            </div>
+            
+            <form id="userForm" onsubmit="saveUser(event)">
+                <input type="hidden" id="userId" value="">
+                
+                <div class="form-grid">
+                    <!-- Usuario -->
+                    <div class="form-group">
+                        <label for="username">Usuario <span class="required">*</span></label>
+                        <input type="text" id="username" required maxlength="50" 
+                               placeholder="Ej: jperez"
+                               pattern="[a-z0-9_]+"
+                               title="Solo minúsculas, números y guión bajo">
+                        <small id="usernameHint" class="hint-text"></small>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label for="userEmail">Email <span class="required">*</span></label>
+                        <input type="email" id="userEmail" required maxlength="100" 
+                               placeholder="Ej: jperez@empresa.com">
+                        <small id="emailHint" class="hint-text"></small>
+                    </div>
+
+                    <!-- Nombre Completo -->
+                    <div class="form-group full-width">
+                        <label for="fullName">Nombre Completo <span class="required">*</span></label>
+                        <input type="text" id="fullName" required maxlength="150" 
+                               placeholder="Ej: Juan Pérez García">
+                    </div>
+
+                    <!-- Contraseña -->
+                    <div class="form-group">
+                        <label for="userPassword">
+                            Contraseña <span class="required" id="passwordRequired">*</span>
+                        </label>
+                        <input type="password" id="userPassword" minlength="6" 
+                               placeholder="Mínimo 6 caracteres">
+                        <small class="hint-text">Dejar en blanco para mantener la actual (al editar)</small>
+                    </div>
+
+                    <!-- Rol -->
+                    <div class="form-group">
+                        <label for="userRole">Rol <span class="required">*</span></label>
+                        <select id="userRole" required>
+                            <option value="USER">Operario</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" onclick="closeUserModal()">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn-primary">
+                        <span id="userSubmitBtnText">Guardar Usuario</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal para Gestionar Reporte -->
+    <div id="manageReportModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Gestionar Reporte</h2>
+                <button class="modal-close" onclick="closeManageReportModal()">&times;</button>
+            </div>
+            
+            <form id="manageReportForm" onsubmit="updateReportStatus(event)">
+                <input type="hidden" id="reportId" value="">
+                
+                <div class="form-grid">
+                    <!-- Info del equipo (solo lectura) -->
+                    <div class="form-group full-width">
+                        <label>Equipo Reportado</label>
+                        <input type="text" id="reportedArticleInfo" readonly style="background: #f5f5f5;">
+                    </div>
+
+                    <!-- Operario (solo lectura) -->
+                    <div class="form-group">
+                        <label>Reportado por</label>
+                        <input type="text" id="reportedByInfo" readonly style="background: #f5f5f5;">
+                    </div>
+
+                    <!-- Fecha (solo lectura) -->
+                    <div class="form-group">
+                        <label>Fecha del Reporte</label>
+                        <input type="text" id="reportDateInfo" readonly style="background: #f5f5f5;">
+                    </div>
+
+                    <!-- Tipo de reporte (solo lectura) -->
+                    <div class="form-group full-width">
+                        <label>Tipo de Reporte</label>
+                        <input type="text" id="reportTypeInfo" readonly style="background: #f5f5f5;">
+                    </div>
+
+                    <!-- Mensaje del operario (solo lectura) -->
+                    <div class="form-group full-width">
+                        <label>Mensaje del Operario</label>
+                        <textarea id="reportMessageInfo" rows="4" readonly style="background: #f5f5f5;"></textarea>
+                    </div>
+
+                    <!-- Estado (editable) -->
+                    <div class="form-group full-width">
+                        <label for="reportStatus">Estado del Reporte <span class="required">*</span></label>
+                        <select id="reportStatus" required>
+                            <option value="PENDIENTE">⏱️ Pendiente</option>
+                            <option value="EN_REVISION">🔍 En Revisión</option>
+                            <option value="RESUELTO">✅ Resuelto</option>
+                            <option value="CERRADO">🔒 Cerrado</option>
+                        </select>
+                    </div>
+
+                    <!-- Respuesta del admin (editable) -->
+                    <div class="form-group full-width">
+                        <label for="adminResponse">Respuesta / Acción Tomada</label>
+                        <textarea id="adminResponse" rows="4" 
+                                  placeholder="Describe las acciones tomadas o comentarios sobre el reporte..."></textarea>
+                        <small class="hint-text">Este mensaje será visible para el operario</small>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" onclick="closeManageReportModal()">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn-primary">
+                        💾 Actualizar Reporte
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- jQuery (required for DataTables) -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    
+    <!-- JS personalizados organizados -->
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/auth.js"></script>
+    <script src="/static/js/dashboard-admin.js"></script>
+    <script src="/static/js/users-management.js"></script>
+    <script src="/static/js/reports-management.js"></script>
+</body>
+</html>
