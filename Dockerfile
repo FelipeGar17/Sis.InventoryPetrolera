@@ -29,6 +29,6 @@ COPY . .
 # Exponer puerto (Railway usa variable PORT dinámica)
 EXPOSE 8080
 
-# Comando para ejecutar la aplicación
-# Railway inyecta automáticamente la variable PORT
-CMD gunicorn run:app --workers 4 --timeout 120 --bind 0.0.0.0:$PORT
+# Comando para ejecutar la aplicación usando variable de entorno PORT
+# Usamos sh -c para que la variable se expanda correctamente
+CMD sh -c "gunicorn run:app --workers 4 --timeout 120 --bind 0.0.0.0:\${PORT:-8080}"
