@@ -22,6 +22,9 @@ class Config:
     
     if DATABASE_URL:
         # Si existe DATABASE_URL completa, usarla directamente
+        # Forzar pymysql si Railway/Heroku usan mysql:// en lugar de mysql+pymysql://
+        if DATABASE_URL.startswith('mysql://'):
+            DATABASE_URL = DATABASE_URL.replace('mysql://', 'mysql+pymysql://', 1)
         SQLALCHEMY_DATABASE_URI = DATABASE_URL
     else:
         # Si no, construir desde componentes individuales
