@@ -18,7 +18,7 @@ function initReportsTable() {
     
     reportsTable = $('#reportsTable').DataTable({
         ajax: {
-            url: 'http://localhost:5000/api/reports/all',
+            url: '/api/reports/all',
             dataSrc: '',
             headers: {
                 'Authorization': 'Bearer ' + token
@@ -122,7 +122,7 @@ function filterReportsByStatus() {
     const status = document.getElementById('reportStatusFilter').value;
     
     const token = localStorage.getItem('access_token');
-    let url = 'http://localhost:5000/api/reports/all';
+    let url = '/api/reports/all';
     if (status) url += `?status=${status}`;
     
     // Actualizar la URL del ajax y recargar
@@ -135,7 +135,7 @@ function filterReportsByStatus() {
 async function openManageReportModal(reportId) {
     try {
         const token = localStorage.getItem('access_token');
-        const response = await fetch(`http://localhost:5000/api/reports/all`, {
+        const response = await fetch(`/api/reports/all`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

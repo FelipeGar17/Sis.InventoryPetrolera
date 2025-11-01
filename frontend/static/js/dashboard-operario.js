@@ -43,7 +43,7 @@ function initInventoryTable() {
     
     inventoryTable = $('#inventoryTable').DataTable({
         ajax: {
-            url: 'http://localhost:5000/api/articles/',
+            url: '/api/articles/',
             dataSrc: '',
             headers: {
                 'Authorization': 'Bearer ' + token
@@ -132,7 +132,7 @@ function initMyReportsTable() {
     
     myReportsTable = $('#myReportsTable').DataTable({
         ajax: {
-            url: 'http://localhost:5000/api/reports/my-reports',
+            url: '/api/reports/my-reports',
             dataSrc: '',
             headers: {
                 'Authorization': 'Bearer ' + token

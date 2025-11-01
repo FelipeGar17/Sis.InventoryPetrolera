@@ -15,7 +15,7 @@ function initUsersTable() {
     
     usersTable = $('#usersTable').DataTable({
         ajax: {
-            url: 'http://localhost:5000/api/users/',
+            url: '/api/users/',
             dataSrc: '',
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem('access_token')
