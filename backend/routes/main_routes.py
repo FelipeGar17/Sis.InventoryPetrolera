@@ -35,8 +35,3 @@ def clear_session():
 def diagnostico():
     """Página de diagnóstico de sesión"""
     return render_template('diagnostico.html')
-
-@bp.route('/init-admin')
-def init_admin_page():
-    """Página de inicialización de admin (TEMPORAL)"""
-    return render_template('init-admin.html')
