@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicializar Admin - Sistema de Inventario</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            padding: 2rem;
+            max-width: 600px;
+            width: 100%;
+        }
+        h1 {
+            color: #ff5722;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 4px;
+        }
+        .warning strong {
+            color: #856404;
+        }
+        button {
+            background: #ff5722;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 0.5rem 0.5rem 0.5rem 0;
+        }
+        button:hover {
+            background: #f4511e;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255,87,34,0.3);
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        #result {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 6px;
+            display: none;
+        }
+        #result.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        #result.error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        #result.info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        pre {
+            background: #f4f4f4;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+        .step {
+            background: #f8f9fa;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 6px;
+            border-left: 4px solid #007bff;
+        }
+        .step h3 {
+            color: #007bff;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Inicialización de Usuario Admin</h1>
+        
+        <div class="warning">
+            <strong>⚠️ Atención:</strong> Esta página es solo para configuración inicial.
+            Debe eliminarse después de usar.
+        </div>
+
+        <div class="step">
+            <h3>Paso 1: Verificar estado actual</h3>
+            <p>Primero verifica si el usuario admin existe y tiene un hash válido:</p>
+            <button onclick="checkAdmin()">Verificar Admin</button>
+        </div>
+
+        <div class="step">
+            <h3>Paso 2: Inicializar/Reparar Admin</h3>
+            <p>Crea o regenera el usuario admin con contraseña correcta:</p>
+            <button onclick="initAdmin()">Inicializar Admin</button>
+        </div>
+
+        <div class="step">
+            <h3>Paso 3: Probar login</h3>
+            <p>Una vez inicializado, ve a la página de login:</p>
+            <button onclick="goToLogin()">Ir a Login</button>
+        </div>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? 'http://localhost:5000'
+            : '';
+
+        async function checkAdmin() {
+            const result = document.getElementById('result');
+            result.style.display = 'block';
+            result.className = 'info';
+            result.innerHTML = '🔍 Verificando...';
+
+            try {
+                const response = await fetch(`${API_BASE}/api/init/check`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    result.className = data.password_valid ? 'success' : 'error';
+                    result.innerHTML = `
+                        <strong>${data.exists ? '✓ Usuario encontrado' : '✗ Usuario no existe'}</strong>
+                        ${data.user ? `
+                            <pre>Username: ${data.user.username}
+Email: ${data.user.email}
+Rol: ${data.user.role}
+Estado: ${data.user.status}
+Hash sample: ${data.hash_sample}
+Hash length: ${data.hash_length}
+Password válido: ${data.password_valid ? '✓ SÍ' : '✗ NO'}</pre>
+                        ` : ''}
+                        ${data.error ? `<p style="color: red;">Error: ${data.error}</p>` : ''}
+                    `;
+                } else {
+                    result.className = 'error';
+                    result.innerHTML = `<strong>✗ Error:</strong> ${data.message || data.error}`;
+                }
+            } catch (error) {
+                result.className = 'error';
+                result.innerHTML = `<strong>✗ Error de conexión:</strong> ${error.message}`;
+            }
+        }
+
+        async function initAdmin() {
+            if (!confirm('¿Estás seguro de inicializar el usuario admin?\n\nEsto regenerará la contraseña a "admin123"')) {
+                return;
+            }
+
+            const result = document.getElementById('result');
+            result.style.display = 'block';
+            result.className = 'info';
+            result.innerHTML = '⚙️ Inicializando usuario admin...';
+
+            try {
+                const response = await fetch(`${API_BASE}/api/init/admin`, {
+                    method: 'POST'
+                });
+                const data = await response.json();
+
+                if (response.ok) {
+                    result.className = 'success';
+                    result.innerHTML = `
+                        <strong>✓ ${data.message}</strong>
+                        <pre>Usuario: ${data.user.username}
+Email: ${data.user.email}
+Contraseña: admin123
+Rol: ${data.user.role}
+Estado: ${data.user.status}
+${data.old_hash ? `
+Hash anterior: ${data.old_hash}...
+Hash nuevo: ${data.new_hash}...` : `Hash: ${data.hash}...`}
+Test de contraseña: ${data.password_test}</pre>
+                        <p style="margin-top: 1rem; color: green; font-weight: bold;">
+                            ✓ Ya puedes hacer login con: admin / admin123
+                        </p>
+                    `;
+                } else {
+                    result.className = 'error';
+                    result.innerHTML = `<strong>✗ Error:</strong> ${data.error}`;
+                }
+            } catch (error) {
+                result.className = 'error';
+                result.innerHTML = `<strong>✗ Error de conexión:</strong> ${error.message}`;
+            }
+        }
+
+        function goToLogin() {
+            window.location.href = '/';
+        }
+
+        // Auto-verificar al cargar
+        window.addEventListener('load', () => {
+            setTimeout(checkAdmin, 500);
+        });
+    </script>
+</body>
+</html>
