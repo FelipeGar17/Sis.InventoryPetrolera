@@ -45,7 +45,7 @@ function loadUserInfo() {
 function initProductsTable() {
     productsTable = $('#productsTable').DataTable({
         ajax: {
-            url: 'http://localhost:5000/api/articles/',
+            url: '/api/articles/',
             dataSrc: ''
         },
         columns: [
@@ -344,7 +344,7 @@ async function checkCodeAvailability(code) {
     clearTimeout(codeCheckTimeout);
     codeCheckTimeout = setTimeout(async () => {
         try {
-            const response = await fetch(`http://localhost:5000/api/articles/check-code/${normalizedCode}`);
+            const response = await fetch(`/api/articles/check-code/${normalizedCode}`);
             const data = await response.json();
             
             if (data.exists) {
@@ -380,7 +380,7 @@ async function handleAutocomplete(input, field) {
     autocompleteTimeout = setTimeout(async () => {
         try {
             const response = await fetch(
-                `http://localhost:5000/api/articles/suggestions?field=${field}&query=${encodeURIComponent(query)}`
+                `/api/articles/suggestions?field=${field}&query=${encodeURIComponent(query)}`
             );
             const suggestions = await response.json();
             
