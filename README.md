@@ -7,6 +7,16 @@ Sistema web profesional para la gestión de inventario y documentación técnica
 [![Flask 3.0](https://img.shields.io/badge/flask-3.0.0-green.svg)](https://flask.palletsprojects.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+## 🌐 Demo en Vivo
+
+**🚀 Aplicación desplegada:** [https://sisinventorypetrolera-production.up.railway.app/](https://sisinventorypetrolera-production.up.railway.app/)
+
+**Credenciales de prueba:**
+- **Administrador**: `admin` / `admin123`
+- **Operario**: `operario1` / `operario123` *(crear usuario en la app)*
+
+> ⚠️ **Nota**: Si usas **Brave Browser**, desactiva los bloqueadores de anuncios para que funcione correctamente.
+
 ## 📋 Características
 
 ### 🔐 Sistema de Autenticación
