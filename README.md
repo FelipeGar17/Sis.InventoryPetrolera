@@ -11,10 +11,6 @@ Sistema web profesional para la gestión de inventario y documentación técnica
 
 **🚀 Aplicación desplegada:** [https://sisinventorypetrolera-production.up.railway.app/](https://sisinventorypetrolera-production.up.railway.app/)
 
-**Credenciales de prueba:**
-- **Administrador**: `admin` / `admin123`
-- **Operario**: `operario1` / `operario123` *(crear usuario en la app)*
-
 > ⚠️ **Nota**: Si usas **Brave Browser**, desactiva los bloqueadores de anuncios para que funcione correctamente.
 
 ## 📋 Características
