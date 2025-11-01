@@ -102,8 +102,17 @@ function initInventoryTable() {
                 data: null,
                 orderable: false,
                 render: function(data, type, row) {
+                    // Escapar HTML para evitar XSS y errores de sintaxis
+                    const safeCode = String(row.code || '').replace(/'/g, '&apos;').replace(/"/g, '&quot;');
+                    const safeName = String(row.name || '').replace(/'/g, '&apos;').replace(/"/g, '&quot;');
+                    
                     return `
-                        <button class="btn-action btn-report" onclick="openReportModal(${row.id}, '${row.code}', '${row.name}')" title="Reportar Problema">
+                        <button class="btn-action btn-report" 
+                                data-id="${row.id}" 
+                                data-code="${safeCode}" 
+                                data-name="${safeName}"
+                                onclick="openReportModalSafe(this)" 
+                                title="Reportar Problema">
                             📝
                         </button>
                     `;
@@ -223,6 +232,21 @@ function navigateTo(section) {
         document.querySelector('[onclick*="mis-reportes"]').classList.add('active');
         initMyReportsTable();
     }
+}
+
+/**
+ * Abre el modal para crear un reporte (versión segura con data attributes)
+ */
+function openReportModalSafe(button) {
+    const articleId = parseInt(button.getAttribute('data-id'));
+    const code = button.getAttribute('data-code');
+    const name = button.getAttribute('data-name');
+    
+    // Decodificar HTML entities
+    const decodedCode = code.replace(/&apos;/g, "'").replace(/&quot;/g, '"');
+    const decodedName = name.replace(/&apos;/g, "'").replace(/&quot;/g, '"');
+    
+    openReportModal(articleId, decodedCode, decodedName);
 }
 
 /**
