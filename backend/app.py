@@ -36,6 +36,7 @@ def register_blueprints(app):
     from backend.routes import auth_routes
     from backend.routes import user_routes
     from backend.routes import report_routes
+    from backend.routes import admin_tools  # Herramientas de diagnóstico
     
     app.register_blueprint(main_routes.bp)
     app.register_blueprint(health_routes.bp)
@@ -43,3 +44,4 @@ def register_blueprints(app):
     app.register_blueprint(auth_routes.bp)
     app.register_blueprint(user_routes.bp)
     app.register_blueprint(report_routes.bp)
+    app.register_blueprint(admin_tools.bp)
