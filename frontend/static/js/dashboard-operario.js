@@ -44,7 +44,10 @@ function initInventoryTable() {
     inventoryTable = $('#inventoryTable').DataTable({
         ajax: {
             url: '/api/articles/',
-            dataSrc: '',
+            dataSrc: function(json) {
+                // Filtrar productos dados de baja
+                return json.filter(article => article.status !== 'BAJA');
+            },
             headers: {
                 'Authorization': 'Bearer ' + token
             },
