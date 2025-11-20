@@ -17,9 +17,10 @@ def init_db(app):
         from backend.models import user
         from backend.models import report
 
-        # Crear todas las tablas si no existen
-        db.create_all()
-        print("✓ Base de datos inicializada correctamente")
+        # Crear todas las tablas si no existen (excepto en modo testing)
+        if not app.config.get("TESTING"):
+            db.create_all()
+            print("✓ Base de datos inicializada correctamente")
 
 
 def test_connection():
