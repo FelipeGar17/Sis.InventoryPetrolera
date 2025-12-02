@@ -8,12 +8,13 @@
     <link rel="stylesheet" href="/static/css/styles.css">
     <style>
         body {
-            background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDvi2JNbZHJVUXDa3MdI1T8QmtZSVXRZ8_1w&s') center/cover no-repeat fixed;
+            background: url('https://i.pinimg.com/originals/8a/9e/fe/8a9efe7c7d369240b667602801ec3d57.jpg') center/cover no-repeat fixed;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
+            padding: 1rem;
         }
         body::before {
             content: '';
@@ -29,7 +30,7 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             max-width: 1000px;
-            width: 90%;
+            width: 100%;
             background: white;
             border-radius: 20px;
             overflow: hidden;
@@ -38,13 +39,15 @@
             position: relative;
         }
         .image-section {
-            background: url('https://worldenergytrad.com/wp-content/uploads/2024/10/arabia-saudi-advierte-de-que-el-precio-del-petroleo-podria-caer-a-50-dolares-40049.jpg') center/cover;
-            padding: 3rem;
+            background: url('https://i.pinimg.com/originals/39/dc/dd/39dcdd12d110e5687fd0c7db80dd2141.jpg') center/cover;
+            /* Imagen petrolera de alta calidad desde Pinterest originals */
+            padding: 2rem;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             color: white;
             position: relative;
+            min-height: 400px;
         }
         .image-section::before {
             content: '';
@@ -61,7 +64,7 @@
             z-index: 2;
         }
         .form-section {
-            padding: 3rem;
+            padding: 2rem;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -86,12 +89,54 @@
             box-shadow: 0 0 0 4px rgba(255,87,34,0.15);
             outline: none;
         }
+        
+        /* Responsive Design */
         @media (max-width: 768px) {
+            body {
+                padding: 0.5rem;
+            }
             .login-container {
                 grid-template-columns: 1fr;
+                max-width: 500px;
             }
             .image-section {
-                display: none;
+                min-height: 200px;
+                padding: 1.5rem;
+            }
+            .image-section h1 {
+                font-size: 1.75rem;
+            }
+            .image-section p {
+                font-size: 1rem;
+            }
+            .form-section {
+                padding: 1.5rem;
+            }
+            .form-section h2 {
+                font-size: 1.75rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 0;
+            }
+            .login-container {
+                border-radius: 0;
+                min-height: 100vh;
+            }
+            .image-section {
+                min-height: 150px;
+                padding: 1rem;
+            }
+            .image-section h1 {
+                font-size: 1.5rem;
+            }
+            .image-section .bg-black\/50 {
+                padding: 0.75rem;
+            }
+            .form-section {
+                padding: 1.25rem;
             }
         }
     </style>

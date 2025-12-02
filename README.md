@@ -1,72 +1,68 @@
-# 🛢️ Sistema de Gestión de Inventario Petrolera
+<div align="center">
 
-Sistema web profesional para la gestión de inventario y documentación técnica de mantenimiento en centrales petroleras. Incluye control de roles (administrador/operario), sistema de reportes, y despliegue automatizado con Docker y Railway.
+# 🛢️ Sistema de Inventario Petrolera
 
-[![CI/CD](https://github.com/FelipeGar17/Sis.InventoryPetrolera/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/FelipeGar17/Sis.InventoryPetrolera/actions)
+### Sistema de gestión integral para control de inventario y reportes de mantenimiento
+
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![Flask 3.0](https://img.shields.io/badge/flask-3.0.0-green.svg)](https://flask.palletsprojects.com/)
+[![MySQL](https://img.shields.io/badge/mysql-8.0-orange.svg)](https://www.mysql.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## 🌐 Demo en Vivo
+[Características](#-características) • [Demo](#-capturas-de-pantalla) • [Instalación](#-instalación-local) • [Tecnologías](#-tecnologías)
 
-**🚀 Aplicación desplegada:** [https://sisinventorypetrolera-production.up.railway.app/](https://sisinventorypetrolera-production.up.railway.app/)
+</div>
 
-> ⚠️ **Nota**: Si usas **Brave Browser**, desactiva los bloqueadores de anuncios para que funcione correctamente.
+---
 
-## 📋 Características
+## 📖 Descripción
 
-### 🔐 Sistema de Autenticación
+Sistema web completo diseñado para la **gestión de inventario y documentación técnica** en centrales petroleras. Incluye autenticación JWT, control de roles (Admin/Operario), sistema de reportes de mantenimiento y despliegue automatizado con Docker.
+
+## ✨ Características
+
+🔐 **Autenticación Segura**
 - Login con JWT (tokens de 24 horas)
-- Roles: **ADMIN** (gestión completa) y **USER** (operario, solo lectura)
-- Encriptación bcrypt para contraseñas
-- Redirección automática según rol
+- Encriptación Bcrypt para contraseñas
+- Control de acceso basado en roles
 
-### 📦 Gestión de Inventario
-- **Administrador**: CRUD completo de artículos (código, nombre, tipo, cantidad, ubicación, stock mínimo)
-- **Operario**: Vista de solo lectura del inventario con DataTables
+📦 **Gestión de Inventario**
+- CRUD completo de artículos
+- Control de stock mínimo
 - Filtros y búsqueda avanzada
-- Exportación a CSV/Excel
+- DataTables interactivas
 
-### 📝 Sistema de Reportes
-- **4 Tipos de Reportes**: Falla, Mantenimiento, Observación, Solicitud
-- **4 Estados**: Pendiente, En Revisión, Resuelto, Cerrado
-- Operarios crean reportes sobre equipos específicos
-- Administradores gestionan y responden reportes
+📝 **Sistema de Reportes**
+- 4 tipos: Falla, Mantenimiento, Observación, Solicitud
+- 4 estados: Pendiente, En Revisión, Resuelto, Cerrado
 - Historial completo con timestamps
 
-### 👥 Gestión de Usuarios (Admin)
-- Crear/editar/eliminar usuarios
-- Asignación de roles
-- Búsqueda y filtros
-- Interfaz con DataTables
+👥 **Gestión de Usuarios**
+- Roles: ADMIN (gestión completa) y USER (solo lectura)
+- Administración de permisos
+- Interfaz intuitiva
 
-## 🚀 Stack Tecnológico
+## 📸 Capturas de Pantalla
 
-### Backend
-- **Flask 3.0.0** - Framework web Python
-- **SQLAlchemy 3.1.1** - ORM para MySQL
-- **Flask-Bcrypt** - Encriptación de contraseñas
-- **PyJWT** - Autenticación con tokens
-- **Gunicorn 21.2.0** - Servidor WSGI de producción
+### Login Responsive
+<div align="center">
+  <img src="screenshots/login.png" alt="Login Desktop" width="100%"/>
+  <p><em>Interfaz de login adaptable a todos los dispositivos</em></p>
+</div>
 
-### Frontend
-- **HTML5/CSS3** con **Tailwind CSS 3.4**
-- **JavaScript** vanilla + **jQuery 3.7.0**
-- **DataTables 1.13.6** - Tablas interactivas
-- **SweetAlert2** - Alertas modernas
+### Dashboard Administrador
+<div align="center">
+  <img src="screenshots/admin.png" alt="Dashboard Admin" width="100%"/>
+  <p><em>Panel de control con gestión completa de inventario, usuarios y reportes</em></p>
+</div>
 
-### Base de Datos
-- **MySQL 8.0** (local/Docker/Railway)
-- Migraciones con scripts SQL
-- Datos de prueba incluidos
+### Dashboard Operario
+<div align="center">
+  <img src="screenshots/operario.png" alt="Dashboard Operario" width="100%"/>
+  <p><em>Vista de solo lectura del inventario para operarios</em></p>
+</div>
 
-### DevOps
-- **Docker** + **Docker Compose** - Contenedores
-- **GitHub Actions** - CI/CD automatizado
-- **Railway.app** - Despliegue en la nube
-- **Pytest** - Suite de pruebas
-
-## 📂 Estructura del Proyecto
+## 🚀 Tecnologías
 
 ```
 Sis.Inventary/
@@ -122,11 +118,24 @@ Sis.Inventary/
 ├── DEPLOYMENT.md              # Guía de despliegue
 ├── DEVOPS_SETUP.md            # Documentación DevOps
 └── README.md
-```
 
-## ⚙️ Instalación y Ejecución
 
-### Opción 1: Desarrollo Local (XAMPP)
+| **Backend** | **Frontend** | **Database** | **DevOps** |
+|-------------|--------------|--------------|------------|
+| Python 3.11 | HTML5/CSS3 | MySQL 8.0 | Docker |
+| Flask 3.0.0 | Tailwind CSS 3.4 | SQLAlchemy 3.1 | GitHub Actions |
+| Flask-Bcrypt | JavaScript ES6 | PyMySQL | Railway.app |
+| PyJWT | jQuery 3.7 | - | Gunicorn 21.2 |
+| Flask-CORS | DataTables 1.13 | - | - |
+
+## 🚀 Instalación Local
+
+### Requisitos Previos
+- Python 3.11+
+- MySQL 8.0+ (XAMPP recomendado)
+- Git
+
+### Pasos de Instalación
 
 ```bash
 # 1. Clonar repositorio
@@ -141,128 +150,115 @@ source venv/bin/activate # Linux/Mac
 # 3. Instalar dependencias
 pip install -r requirements.txt
 
-# 4. Configurar base de datos MySQL (XAMPP)
-# - Iniciar Apache y MySQL en XAMPP
-# - Importar database/init.sql en phpMyAdmin
+# 4. Configurar MySQL
+# Iniciar MySQL en XAMPP e importar database/init.sql
 
-# 5. Configurar variables de entorno (opcional)
-# Crear archivo .env con:
-SECRET_KEY=tu-clave-secreta-aqui
-FLASK_ENV=development
+# 5. Configurar variables (.env)
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=
+DB_NAME=inventario_petrolera
+SECRET_KEY=tu-clave-secreta
 
 # 6. Ejecutar aplicación
 python run.py
-
-# 7. Acceder a http://localhost:5000
 ```
 
-**Usuarios de Prueba:**
-- **Admin**: `admin` / `admin123`
-- **Operario**: `operario1` / `operario123`
+🌐 Abre tu navegador en **http://localhost:5000**
 
-### Opción 2: Docker Local
+### 👤 Usuarios de Prueba
+
+| Rol | Usuario | Contraseña |
+|-----|---------|------------|
+| **Admin** | `admin` | `admin123` |
+| **Operario** | `jfelipe` | `123456` |
+
+## 🐳 Docker
 
 ```bash
-# 1. Construir y ejecutar
+# Construir y ejecutar
 docker-compose up --build
 
-# 2. Acceder a http://localhost:5000
-
-# 3. Detener contenedores
+# Detener
 docker-compose down
-
-# Incluye MySQL automático + datos de prueba
 ```
 
-### Opción 3: Despliegue en Railway.app (Recomendado)
+## 📁 Estructura del Proyecto
 
-Ver guía completa en **[DEPLOYMENT.md](DEPLOYMENT.md)** - Sección "Opción 2: Deploy en Railway.app"
+```
+Sis.Inventary/
+├── backend/              # Lógica del servidor
+│   ├── models/          # Modelos SQLAlchemy
+│   ├── routes/          # Endpoints API
+│   └── config/          # Configuración y DB
+├── frontend/            # Interfaz de usuario
+│   ├── templates/       # HTML Jinja2
+│   └── static/          # CSS/JS/Assets
+├── database/            # Scripts SQL
+├── screenshots/         # Capturas para README
+├── tests/               # Tests unitarios
+├── docker-compose.yml   # Orquestación Docker
+└── requirements.txt     # Dependencias Python
+```
 
-**Pasos rápidos:**
-1. Crear cuenta en [Railway.app](https://railway.app) con GitHub
-2. New Project → Deploy from GitHub repo
-3. Add MySQL database (automático)
-4. Configurar variables de entorno:
-   - `SECRET_KEY`: tu-clave-secreta
-   - `FLASK_ENV`: production
-   - `DATABASE_URL`: (auto-generado por Railway)
-5. Generate domain → Acceder a tu app en línea
+## 🔐 Autenticación
 
-**💰 Costo**: $5 USD/mes de crédito gratis (suficiente para proyectos pequeños)
+El sistema implementa **autenticación JWT** con las siguientes características:
 
-## 🧪 Pruebas
+- 🔒 **Bcrypt**: Encriptación de contraseñas con salt
+- 🎫 **JWT**: Tokens de sesión con expiración de 24 horas
+- 🛡️ **Roles**: Control de acceso basado en permisos (ADMIN/USER)
+- 🚪 **Redirección**: Automática según rol después del login
+
+## 📊 Funcionalidades por Rol
+
+### 👨‍💼 Administrador
+- ✅ Gestión completa de inventario (CRUD)
+- ✅ Administración de usuarios
+- ✅ Gestión y respuesta de reportes
+- ✅ Acceso a todas las funcionalidades
+
+### 👷 Operario
+- ✅ Visualización de inventario (solo lectura)
+- ✅ Creación de reportes de mantenimiento
+- ✅ Consulta de historial de reportes
+- ❌ Sin permisos de edición
+
+## 🌐 Despliegue en Producción
+
+### Railway.app (Recomendado)
+
+1. Conecta tu repositorio de GitHub
+2. Agrega servicio MySQL
+3. Configura variables de entorno
+4. Deploy automático
+
+📖 Ver guía completa en [DEPLOYMENT.md](DEPLOYMENT.md)
+
+## 🧪 Testing
 
 ```bash
-# Ejecutar tests
+# Ejecutar todos los tests
 pytest
 
-# Con coverage
+# Con reporte de cobertura
 pytest --cov=backend --cov-report=html
 ```
 
-## 🔧 Configuración
-
-### Variables de Entorno
-
-| Variable | Descripción | Valor por Defecto |
-|----------|-------------|-------------------|
-| `SECRET_KEY` | Clave secreta JWT | `dev-secret-key` |
-| `FLASK_ENV` | Entorno (development/production) | `development` |
-| `DATABASE_URL` | URL MySQL completa | Auto (Railway) |
-| `DB_HOST` | Host de MySQL | `localhost` |
-| `DB_USER` | Usuario MySQL | `root` |
-| `DB_PASSWORD` | Contraseña MySQL | `` |
-| `DB_NAME` | Nombre base de datos | `inventario_petrolera` |
-
-### Base de Datos
-
-**Schema:**
-- `users` - Usuarios del sistema
-- `articles` - Inventario de equipos
-- `reports` - Reportes de mantenimiento
-
-Ver `database/init.sql` para estructura completa.
-
-## 🚢 CI/CD Pipeline
-
-GitHub Actions ejecuta automáticamente al hacer push:
-
-1. **Lint** - Validación con Black y Flake8
-2. **Test** - Suite de pruebas con pytest
-3. **Build** - Construcción de imagen Docker
-4. **Deploy** - Despliegue a Railway.app
-5. **Notify** - Notificación de resultado
-
-Ver [.github/workflows/ci-cd.yml](.github/workflows/ci-cd.yml)
-
-## 📖 Documentación Adicional
-
-- **[DEPLOYMENT.md](DEPLOYMENT.md)** - Guía completa de despliegue (Docker, Railway, GitHub Actions)
-- **[DEVOPS_SETUP.md](DEVOPS_SETUP.md)** - Resumen ejecutivo de infraestructura DevOps
-
-## 🤝 Contribuir
-
-1. Fork el proyecto
-2. Crea tu rama (`git checkout -b feature/nueva-funcionalidad`)
-3. Commit cambios (`git commit -m 'Agregar nueva funcionalidad'`)
-4. Push a la rama (`git push origin feature/nueva-funcionalidad`)
-5. Abre un Pull Request
-
 ## 📝 Licencia
 
-Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles.
+Este proyecto está bajo la Licencia MIT.
 
 ## 👨‍💻 Autor
 
-**Felipe García** - [@FelipeGar17](https://github.com/FelipeGar17)
-
-## 🙏 Agradecimientos
-
-- Flask y comunidad Python
-- Railway.app por el hosting gratuito
-- Tailwind CSS por el diseño moderno
-- DataTables por las tablas interactivas
+**Felipe García** - [GitHub](https://github.com/FelipeGar17) | [LinkedIn](https://linkedin.com/in/FelipeGar17)
 
 ---
 
-⭐ **¡Si te gusta el proyecto, dale una estrella!** ⭐
+<div align="center">
+
+**⭐ Si este proyecto te fue útil, considera darle una estrella ⭐**
+
+[![GitHub stars](https://img.shields.io/github/stars/FelipeGar17/Sis.InventoryPetrolera.svg?style=social&label=Star)](https://github.com/FelipeGar17/Sis.InventoryPetrolera)
+
+</div>
